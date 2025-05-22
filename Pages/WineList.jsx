@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import api from "../services/api";
-import WineCard from "../components/WineCard";
+import api from "../src/services/api";
+import WineCard from "../src/components/WineCard";
 
 export default function Dashboard() {
   const [wines, setWines] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const storedToken = localStorage.getItem("authToken");
+
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const res = await api.get("/wine");
+        const res = await api.get(`${import.meta.env.VITE_API_URL}/wine`,
+           { headers: { Authorization: `Bearer ${storedToken}` } }
+         )
         setWines(res.data);
       } catch (err) {
         console.error("Error fetching wines:", err);
