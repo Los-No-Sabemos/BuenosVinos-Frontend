@@ -1,18 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import WineList from "./pages/WineList";
-import AddWine from "./components/AddWine";
 import WineList from "../Pages/WineList";
-import LoginPage from "../Pages/LoginPage";
+import AddWine from "./components/AddWine";
 import SignupPage from "../Pages/SignupPage";
 import IsPrivate from "./components/IsPrivate";
 import IsAnon from "./components/IsAnon";
+import LoginPage from "../Pages/LoginPage"
+
 
 
 
 export default function App() {
   return (
       <Routes>
-        <Route path="/" element={<WineList />} />
         <Route path="/add-wine" element={<AddWine />} />
         <Route path="/" element={<IsPrivate><WineList /></IsPrivate>} />
         <Route path="/login" element={<IsAnon><LoginPage /></IsAnon>} />

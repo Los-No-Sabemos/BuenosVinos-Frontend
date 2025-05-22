@@ -19,8 +19,8 @@ export default function AddWineForm({ onAdd }) {
     const fetchData = async () => {
       try {
         const [regionRes, grapeRes] = await Promise.all([
-          api.get("/regions"),
-          api.get("/grapes"),
+          api.get("/api/regions"),
+          api.get("/api/grapes"),
         ]);
         setRegions(regionRes.data);
         setGrapes(grapeRes.data);
