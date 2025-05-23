@@ -16,7 +16,7 @@ export default function AddWineForm({ onAdd }) {
   const [error, setError] = useState(null);
 
 
-  const token = localStorage.getItem("token");
+ localStorage.setItem("authToken", token);
   if (!token) {
     return <Navigate to="/login" replace />;
   }
