@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { Navigate } from "react-router-dom";
 
 export default function AddWineForm({ onAdd }) {
   const [name, setName] = useState("");
   const [year, setYear] = useState("");
-  const [rating, setRating] = useState(5);  
+  const [rating, setRating] = useState(5);
   const [notes, setNotes] = useState("");
   const [regionId, setRegionId] = useState("");
   const [grapeIds, setGrapeIds] = useState([]);
@@ -14,7 +15,12 @@ export default function AddWineForm({ onAdd }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,9 +30,9 @@ export default function AddWineForm({ onAdd }) {
         ]);
         setRegions(regionRes.data);
         setGrapes(grapeRes.data);
-        setLoading(false);
       } catch (err) {
         setError("Failed to load regions or grapes");
+      } finally {
         setLoading(false);
       }
     };
@@ -36,7 +42,6 @@ export default function AddWineForm({ onAdd }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   
     if (!name || !year || !regionId || grapeIds.length === 0) {
       setError("Please fill all required fields");
       return;
@@ -44,7 +49,7 @@ export default function AddWineForm({ onAdd }) {
 
     try {
       setError(null);
-      const res = await api.post("/wine", {
+      const res = await api.post("/api/wine", {
         name,
         year: Number(year),
         rating: Number(rating),
@@ -52,8 +57,9 @@ export default function AddWineForm({ onAdd }) {
         regionId,
         grapeIds,
       });
-      if (onAdd) onAdd(res.data); 
-     
+
+      if (onAdd) onAdd(res.data);
+
       setName("");
       setYear("");
       setRating(5);
@@ -61,7 +67,7 @@ export default function AddWineForm({ onAdd }) {
       setRegionId("");
       setGrapeIds([]);
     } catch (err) {
-      setError("Failed to add wine");
+      setError("Failed to add wine. Are you logged in?");
     }
   };
 
@@ -69,7 +75,7 @@ export default function AddWineForm({ onAdd }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div>
         <label>Wine Name*</label>
@@ -94,7 +100,7 @@ export default function AddWineForm({ onAdd }) {
       </div>
 
       <div>
-        <label>Rating (1-10)*</label>
+        <label>Rating (1–10)*</label>
         <input
           type="number"
           value={rating}
@@ -134,7 +140,6 @@ export default function AddWineForm({ onAdd }) {
             )
           }
           required
-          
         >
           {grapes.map((grape) => (
             <option key={grape._id} value={grape._id}>
@@ -154,10 +159,7 @@ export default function AddWineForm({ onAdd }) {
         />
       </div>
 
-      <button
-        type="submit">
-        Add Wine
-      </button>
+      <button type="submit">Add Wine</button>
     </form>
   );
 }
