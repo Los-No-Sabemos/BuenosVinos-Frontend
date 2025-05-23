@@ -3,7 +3,7 @@ import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 export default function AddWineForm({ onAdd }) {
-  const [regionName, setRegionName] = useState("");
+  const [region, setRegion] = useState("");
   const [country, setCountry] = useState("");
 
   
@@ -16,22 +16,22 @@ export default function AddWineForm({ onAdd }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!regionName || !country ) {
+    if (!region || !country ) {
       setError("Please fill all required fields");
       return;
     }
 
     try {
       setError(null);
-      const res = await api.post("/regions", {
-        regionName,
+      const res = await api.post("/api/regions", {
+        region,
         country,
        
       });
 
       if (onAdd) onAdd(res.data);
 
-        setRegionName("");
+        setRegion("");
         setCountry("");
       
      
@@ -51,8 +51,8 @@ export default function AddWineForm({ onAdd }) {
         <label>Region Name*</label>
         <input
             type="text"
-            value={regionName}
-            onChange={(e) => setRegionName(e.target.value)}
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
             required
         />
       </div>

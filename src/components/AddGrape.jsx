@@ -4,14 +4,14 @@ import api from "../services/api";
 
 export default function AddGrapeForm({ onAdd }) {
 
- const [grapeName, setGrapeName] = useState("");
+ const [name, setName] = useState("");
  const [description , setDescription] = useState("");
  const [error, setError] = useState(null);
 
  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!grapeName || !description) {
+    if (!name || !description) {
       setError("Please fill all required fields");
       return;
     }
@@ -19,13 +19,13 @@ export default function AddGrapeForm({ onAdd }) {
     try {
       setError(null);
       const res = await api.post("/api/grapes", {
-         grapeName,
+         name,
          description,
       });
     
       if (onAdd) onAdd(res.data);
     
-      setGrapeName("");
+      setName("");
       setDescription("");
     
     } catch (err) {
@@ -41,8 +41,8 @@ export default function AddGrapeForm({ onAdd }) {
         <label>Grape Name*</label>
         <input
             type="text"
-            value={grapeName}
-            onChange={(e) => setGrapeName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
         />
       </div>
