@@ -141,7 +141,7 @@ export default function AddWineForm({ onAdd }) {
             </option>
           ))}
         </select>
-        <small>Hold Ctrl (Cmd on Mac) to select multiple</small>
+        <small>Hold Ctrl to select multiple</small>
       </div>
 
       <div>
