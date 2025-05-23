@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 export default function AddWineForm({ onAdd }) {
   const [name, setName] = useState("");
   const [year, setYear] = useState("");
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(10);
   const [notes, setNotes] = useState("");
   const [regionId, setRegionId] = useState("");
   const [grapeIds, setGrapeIds] = useState([]);
@@ -56,7 +56,7 @@ export default function AddWineForm({ onAdd }) {
 
       setName("");
       setYear("");
-      setRating(5);
+      setRating(10);
       setNotes("");
       setRegionId("");
       setGrapeIds([]);
