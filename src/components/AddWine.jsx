@@ -15,12 +15,6 @@ export default function AddWineForm({ onAdd }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
- localStorage.setItem("authToken", token);
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       try {

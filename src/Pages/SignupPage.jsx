@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../services/api"
 
-const API_URL = import.meta.env.VITE_API_URL;
+
 
 function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
 
   const navigate = useNavigate();
@@ -15,23 +16,23 @@ function SignupPage() {
   
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
-  const handleName = (e) => setName(e.target.value);
+  const handleUserName = (e) => setUserName(e.target.value);
 
   
   const handleSignupSubmit = (e) => {
     e.preventDefault();
     // Create an object representing the request body
-    const requestBody = { email, password, name };
+    const requestBody = { email, password, username };
 
     // Make an axios request to the API
     // If POST request is successful redirect to login page
     // If the request resolves with an error, set the error message in the state
-    axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, requestBody)
+    axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`,requestBody)
       .then(() => {
         navigate("/login");
       })
       .catch((error) => {
-        const errorDescription = error.response.data.message;
+        const errorDescription = error.response?.data?.message || "signup failed";
         setErrorMessage(errorDescription);
       })
   };
@@ -84,14 +85,14 @@ function SignupPage() {
           htmlFor="name"
           className="text-gray-600 text-left ml-1 -mb-2 text-l font-bold"
         >
-          Name
+          Username
         </label>
         <input
           type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={handleName}
+          name="Username"
+          id="Userame"
+          value={username}
+          onChange={handleUserName}
           className="border rounded p-2 w-full mb-6"
           autoComplete="off"
         />        

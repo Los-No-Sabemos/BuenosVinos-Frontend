@@ -14,10 +14,10 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/auth/login", { email, password });
+      const response = await api.post("/auth/login", { email, password });      
       
       // Save token in context/localStorage
-      storeToken(response.data.token);
+      storeToken(response.data.authToken);
 
       // Update auth state from token
       authenticateUser();
