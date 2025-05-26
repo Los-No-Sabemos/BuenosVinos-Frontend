@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import api from "../services/api"
-
-
 
 function SignupPage() {
   const [email, setEmail] = useState("");
@@ -13,104 +10,114 @@ function SignupPage() {
 
   const navigate = useNavigate();
 
-  
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
   const handleUserName = (e) => setUserName(e.target.value);
 
-  
   const handleSignupSubmit = (e) => {
     e.preventDefault();
-    // Create an object representing the request body
     const requestBody = { email, password, username };
 
-    // Make an axios request to the API
-    // If POST request is successful redirect to login page
-    // If the request resolves with an error, set the error message in the state
-    axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`,requestBody)
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/auth/signup`, requestBody)
       .then(() => {
         navigate("/login");
       })
       .catch((error) => {
-        const errorDescription = error.response?.data?.message || "signup failed";
+        const errorDescription =
+          error.response?.data?.message || "Signup failed";
         setErrorMessage(errorDescription);
-      })
+      });
   };
 
   return (
-    <div className="CohortCreatePage p-8 pb-16 mb-10 mt-10 rounded-lg shadow-md flex flex-col h-full relative w-full max-w-3xl mx-auto">
-      <div className="flex justify-center bg-white items-center mb-4 pt-8 absolute top-0 left-0 right-0 py-2 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 border-b border-gray-300 shadow-sm"></div>
+    <div className="min-h-screen bg-[#fdf7f2] flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8 border border-[#e6d3c5]">
+        <h2 className="text-3xl font-serif font-bold text-[#4b2e2e] text-center mb-6">
+          Create Your Account
+        </h2>
 
-      <form
-        onSubmit={handleSignupSubmit}
-        className="grid grid-cols-1 gap-4 overflow-y-auto mt-12 px-4"
-      >
-        <h3 className="text-2xl font-semibold text-gray-700 mb-6 sticky left-0">
-          Sign Up
-        </h3>
+        <form onSubmit={handleSignupSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-[#4b2e2e]"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={username}
+              onChange={handleUserName}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
+              required
+            />
+          </div>
 
-        <label
-          htmlFor="email"
-          className="text-gray-600 text-left ml-1 -mb-2 text-l font-bold"
-        >
-          Email
-        </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={email}
-          onChange={handleEmail}
-          className="border rounded p-2 w-full mb-6"
-          autoComplete="off"
-        />
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-[#4b2e2e]"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={handleEmail}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
+              required
+            />
+          </div>
 
-        <label
-          htmlFor="password"
-          className="text-gray-600 text-left ml-1 -mb-2 text-l font-bold"
-        >
-          Password
-        </label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          value={password}
-          onChange={handlePassword}
-          className="border rounded p-2 w-full mb-6"
-          autoComplete="off"
-        />
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-[#4b2e2e]"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={handlePassword}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
+              required
+            />
+          </div>
 
-<label
-          htmlFor="name"
-          className="text-gray-600 text-left ml-1 -mb-2 text-l font-bold"
-        >
-          Username
-        </label>
-        <input
-          type="text"
-          name="Username"
-          id="Userame"
-          value={username}
-          onChange={handleUserName}
-          className="border rounded p-2 w-full mb-6"
-          autoComplete="off"
-        />        
+          {errorMessage && (
+            <p className="text-sm text-red-600 text-center mt-2">
+              {errorMessage}
+            </p>
+          )}
 
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 transition duration-150 ease-in-out"
-        >
-          Create Account
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-[#764134] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#5e332a] transition duration-200"
+          >
+            Create Account
+          </button>
+        </form>
 
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-      <p className="mt-10 mb-2">Already have an account?</p>
-      <Link to={"/login"}> Log in</Link>
+        <p className="mt-6 text-center text-sm text-gray-600">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-[#764134] hover:underline font-medium"
+          >
+            Log in
+          </Link>
+        </p>
+      </div>
     </div>
-  )
+  );
 }
 
 export default SignupPage;

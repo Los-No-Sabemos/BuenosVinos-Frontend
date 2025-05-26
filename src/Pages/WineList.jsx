@@ -15,7 +15,6 @@ export default function WineList() {
       try {
         const res = await api.get(
           `${import.meta.env.VITE_API_URL}/api/wine`,
-          { headers: { Authorization: `Bearer ${storedToken}` } }
         );
         setWines(res.data);
       } catch (err) {
@@ -45,6 +44,18 @@ export default function WineList() {
     navigate(`/wines/${wine._id}/edit`);
   };
 
+ const handleSaveToCellar = async (wineId) => {
+  try {
+    await api.post(`${import.meta.env.VITE_API_URL}/api/wine/save/${wineId}`, null, {
+      headers: { Authorization: `Bearer ${storedToken}` }
+    });
+    alert("Wine saved to your cellar!");
+  } catch (err) {
+    console.error("Error saving wine:", err);
+    alert("Could not save wine.");
+  }
+};
+
   if (loading) return <p className="p-6">Loading wines...</p>;
 
   return (
@@ -59,6 +70,7 @@ export default function WineList() {
             wine={wine}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onSave={handleSaveToCellar}
           />
         ))
       )}

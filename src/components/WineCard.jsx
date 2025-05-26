@@ -1,38 +1,57 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/auth.context";
 
-export default function WineCard({ wine, onEdit, onDelete }) {
-  const { user } = useContext(AuthContext);
+export default function WineCard({ wine, onEdit, onDelete, onSave }) {
+  const { user, isLoggedIn } = useContext(AuthContext);
   const isCreator = user?._id === wine.userId;
 
   return (
-    <div className="bg-[#fdfaf6] border border-[#e2d6c5] rounded-xl shadow-md p-6 space-y-2">
-      <h2 className="text-2xl font-serif text-[#800020] font-semibold">
-        {wine.name} <span className="text-gray-600 text-lg">({wine.year})</span>
-      </h2>
+    <div className="flex gap-6 bg-[#fdf7f2] border border-[#e6d3c5] rounded-2xl shadow-md p-4 hover:shadow-lg transition">
+      
+      {/*placeholder for now need to update model backend */}
+      <div className="w-32 h-32 bg-[#e9dbd0] rounded-lg flex items-center justify-center text-[#a78a7f] text-sm italic">
+        {/* <img src={wine.image} /> */}
+        No image
+      </div>
 
-      <p className="text-gray-700">
-        <span className="font-medium text-[#5b3b3b]">Rating:</span> {wine.rating}/10
-      </p>
+      
+      <div className="flex-1">
+        <h2 className="text-2xl font-serif font-semibold text-[#4b2e2e]">
+          {wine.name} <span className="text-[#a78a7f] text-lg">({wine.year})</span>
+        </h2>
 
-      <p className="text-sm text-gray-600 italic">{wine.notes}</p>
+        <p className="mt-1 text-[#7c4a3a] font-medium">Rating: {wine.rating}/10</p>
 
-      {isCreator && (
-        <div className="mt-4 flex gap-3">
-          <button
-            onClick={() => onEdit(wine)}
-            className="bg-[#800020] text-white px-4 py-1 rounded hover:bg-[#a52a2a] transition"
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => onDelete(wine._id)}
-            className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700 transition"
-          >
-            Delete
-          </button>
-        </div>
-      )}
+        <p className="text-[#4b3b38] italic text-sm mt-2">{wine.notes}</p>
+
+        {isLoggedIn && (
+          <div className="pt-4 flex flex-wrap gap-3">
+            {isCreator ? (
+              <>
+                <button
+                  onClick={() => onEdit(wine)}
+                  className="px-4 py-2 bg-[#764134] text-white rounded-lg hover:bg-[#5e332a] transition"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => onDelete(wine._id)}
+                  className="px-4 py-2 bg-[#9a2c2c] text-white rounded-lg hover:bg-[#7f2323] transition"
+                >
+                  Delete
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => onSave(wine._id)}
+                className="px-4 py-2 bg-[#556b2f] text-white rounded-lg hover:bg-[#445522] transition"
+              >
+                Save to My Cellar
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
