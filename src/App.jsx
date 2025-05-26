@@ -19,8 +19,7 @@ export default function App() {
       <NavBar />
       <Routes>
         <Route path="/add-wine" element={<IsPrivate><AddWine /></IsPrivate>} />
-       <Route path="/add-wine" element={<IsPrivate><AddWine /></IsPrivate>} />
-       <Route path="/grapes" element={<IsPrivate><GrapeList /></IsPrivate>} />
+        <Route path="/grapes" element={<IsPrivate><GrapeList /></IsPrivate>} />
         <Route path="/add-region" element={<IsPrivate><AddRegion /></IsPrivate>} />
         <Route path="/add-grape" element={<IsPrivate><AddGrape /></IsPrivate>} />
         <Route path="/" element={<WineList />} />
@@ -28,8 +27,7 @@ export default function App() {
         <Route path="/login" element={<IsAnon><LoginPage /></IsAnon>} />
         <Route path="/signup" element={<IsAnon><SignupPage /></IsAnon>} />
         <Route path="/wines/:wineId/edit" element={<IsPrivate><EditWinePage /></IsPrivate>} />
-          <Route path="/signup" element={<IsAnon><SignupPage /></IsAnon>} />
-          <Route path="/wines/:wineId/edit" element={<IsPrivate><EditWinePage /></IsPrivate>} />
+        <Route path="/signup" element={<IsAnon><SignupPage /></IsAnon>} />
         <Route path="/grapes/:grapeId" element={<IsPrivate><GrapeDetails /></IsPrivate>} />
       </Routes>
     </>

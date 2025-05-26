@@ -15,7 +15,6 @@ export default function WineList() {
       try {
         const res = await api.get(
           `${import.meta.env.VITE_API_URL}/api/wine`,
-          { headers: { Authorization: `Bearer ${storedToken}` } }
         );
         setWines(res.data);
       } catch (err) {
