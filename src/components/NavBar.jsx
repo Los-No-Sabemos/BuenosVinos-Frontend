@@ -11,8 +11,7 @@ export default function NavBar() {
     navigate("/login");
   };
 
-  
-  if (isLoading) return null; 
+  if (isLoading) return null;
 
   return (
     <nav className="bg-[#2c1a1d] text-white px-6 py-4 shadow-lg">
@@ -29,9 +28,14 @@ export default function NavBar() {
             Home
           </Link>
           {isLoggedIn && (
-            <Link to="/add-wine" className="hover:text-[#d4af7f] transition">
-              Add Wine
-            </Link>
+            <>
+              <Link to="/add-wine" className="hover:text-[#d4af7f] transition">
+                Add Wine
+              </Link>
+              <Link to="/my-cellar" className="hover:text-[#d4af7f] transition">
+                My Cellar
+              </Link>
+            </>
           )}
         </div>
 
