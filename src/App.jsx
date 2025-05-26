@@ -7,7 +7,8 @@ import IsAnon from "./components/IsAnon";
 import LoginPage from "./Pages/LoginPage"
 import AddRegion from "./components/AddRegion";
 import AddGrape from "./components/AddGrape";
-
+import GrapeList from "./Pages/GrapeList";
+import GrapeDetails from "./Pages/GrapeDetails";
 import EditWinePage from "./Pages/EditWinePage";
 import NavBar from "./components/NavBar";
 
@@ -19,12 +20,14 @@ export default function App() {
        <NavBar />
       <Routes>
        <Route path="/add-wine" element={<IsPrivate><AddWine /></IsPrivate>} />
+       <Route path="/grapes" element={<IsPrivate><GrapeList /></IsPrivate>} />
         <Route path="/add-region" element={<IsPrivate><AddRegion /></IsPrivate>} />
         <Route path="/add-grape" element={<IsPrivate><AddGrape /></IsPrivate>} />
         <Route path="/" element={<IsPrivate><WineList /></IsPrivate>} />
         <Route path="/login" element={<IsAnon><LoginPage /></IsAnon>} />
           <Route path="/signup" element={<IsAnon><SignupPage /></IsAnon>} />
           <Route path="/wines/:wineId/edit" element={<IsPrivate><EditWinePage /></IsPrivate>} />
+        <Route path="/grapes/:grapeId" element={<IsPrivate><GrapeDetails /></IsPrivate>} />
       </Routes>
       </>
   );
