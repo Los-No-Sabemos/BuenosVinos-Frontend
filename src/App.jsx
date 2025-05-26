@@ -9,6 +9,7 @@ import AddRegion from "./components/AddRegion";
 import AddGrape from "./components/AddGrape";
 import GrapeList from "./Pages/GrapeList";
 import GrapeDetails from "./Pages/GrapeDetails";
+import RegionList from "./Pages/RegionList";
 import EditWinePage from "./Pages/EditWinePage";
 import NavBar from "./components/NavBar";
 
@@ -21,6 +22,7 @@ export default function App() {
       <Routes>
        <Route path="/add-wine" element={<IsPrivate><AddWine /></IsPrivate>} />
        <Route path="/grapes" element={<IsPrivate><GrapeList /></IsPrivate>} />
+        <Route path="/regions" element={<IsPrivate><RegionList /></IsPrivate>} />
         <Route path="/add-region" element={<IsPrivate><AddRegion /></IsPrivate>} />
         <Route path="/add-grape" element={<IsPrivate><AddGrape /></IsPrivate>} />
         <Route path="/" element={<IsPrivate><WineList /></IsPrivate>} />

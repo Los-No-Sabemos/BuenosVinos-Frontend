@@ -33,6 +33,12 @@ export default function NavBar() {
               Add Wine
             </Link>
           )}
+          <Link to="/grapes" className="hover:text-[#d4af7f] transition">
+            Grapes
+          </Link>
+          <Link to="/regions" className="hover:text-[#d4af7f] transition">
+            Regions
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4 text-sm">
