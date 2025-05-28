@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import WineCard from "../components/WineCard";
+import Footer from "../components/Footer";
 
 export default function WineList() {
   const [wines, setWines] = useState([]);
@@ -59,21 +60,27 @@ export default function WineList() {
   if (loading) return <p className="p-6">Loading wines...</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-4">
-      <h1 className="text-3xl font-bold">All Wines</h1>
-      {wines.length === 0 ? (
-        <p>No wines in the cellar yet</p>
-      ) : (
-        wines.map((wine) => (
-          <WineCard
-            key={wine._id}
-            wine={wine}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onSave={handleSaveToCellar}
-          />
-        ))
-      )}
-    </div>
+    <>
+      <div className="max-w-3xl mx-auto p-6 space-y-4">
+        <h1 className="text-3xl font-bold">All Wines</h1>
+        {wines.length === 0 ? (
+          <p>No wines in the cellar yet</p>
+        ) : (
+          wines.map((wine) => (
+            <WineCard
+              key={wine._id}
+              wine={wine}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onSave={handleSaveToCellar}
+            />
+          ))
+        )}
+      </div>
+      <div>
+        <Footer />
+      </div>
+    </>
   );
+   
 }

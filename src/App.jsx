@@ -13,6 +13,7 @@ import RegionList from "./Pages/RegionList";
 import EditWinePage from "./Pages/EditWinePage";
 import MyCellarPage from "./Pages/MyCellarPage"; 
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/add-wine" element={<IsPrivate><AddWine /></IsPrivate>} />
         <Route path="/grapes" element={<IsPrivate><GrapeList /></IsPrivate>} />
+        <Route path="/regions" element={<isPrivate> <RegionList /></isPrivate>}/>
         <Route path="/add-region" element={<IsPrivate><AddRegion /></IsPrivate>} />
         <Route path="/add-grape" element={<IsPrivate><AddGrape /></IsPrivate>} />
         <Route path="/" element={<WineList />} />
@@ -31,6 +33,7 @@ export default function App() {
         <Route path="/signup" element={<IsAnon><SignupPage /></IsAnon>} />
         <Route path="/grapes/:grapeId" element={<IsPrivate><GrapeDetails /></IsPrivate>} />
       </Routes>
+      
     </>
   );
 }
