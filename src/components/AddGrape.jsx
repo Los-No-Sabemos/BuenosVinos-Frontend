@@ -1,5 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate} from "react-router-dom";
 
 
 export default function AddGrapeForm({ onAdd }) {
@@ -18,6 +20,8 @@ export default function AddGrapeForm({ onAdd }) {
   const [imageGrape, setImageGrape] = useState("");
   const [imageWineGlass, setImageWineGlass] = useState("");
  const [error, setError] = useState(null);
+
+ const navigate = useNavigate();
 
  const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +64,10 @@ export default function AddGrapeForm({ onAdd }) {
       setServingTemperature("");
       setImageGrape("");
       setImageWineGlass("");
+      toast.success("🎉 New grape added!");
+          setTimeout(() => {
+            navigate(`/grapes`);
+          }, 2000);
     
     } catch (err) {
       setError("Failed to add grape. Are you logged in?");
@@ -228,6 +236,7 @@ export default function AddGrapeForm({ onAdd }) {
         >
           Add Grape
         </button>
+        <ToastContainer position="bottom-left" autoClose={1800} hideProgressBar={false}> New Grape Added! </ToastContainer>
       </div>
     </form>
   );
