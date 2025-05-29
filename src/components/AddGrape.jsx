@@ -4,7 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate} from "react-router-dom";
 
 
-export default function AddGrapeForm({ onAdd }) {
+export default function AddGrape({ onAdd }) {
 
  const [name, setName] = useState("");
  const [description , setDescription] = useState("");

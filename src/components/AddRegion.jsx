@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 
-export default function AddWineForm({ onAdd }) {
+export default function AddWine({ onAdd }) {
   const [region, setRegion] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
