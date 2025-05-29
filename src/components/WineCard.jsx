@@ -4,14 +4,22 @@ import { AuthContext } from "../context/auth.context";
 export default function WineCard({ wine, onEdit, onDelete, onSave }) {
   const { user, isLoggedIn } = useContext(AuthContext);
   const isCreator = user?._id === wine.userId;
+  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const imageUrl = wine.image ? `${baseURL}${wine.image}` : null;
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 bg-[#f9f5f1] border border-[#cbbba0] rounded-3xl shadow-lg p-6 hover:shadow-xl transition w-full">
-
-      {/* Placeholder image */}
-      <div className="w-full sm:w-36 h-44 sm:h-36 bg-[#d9cfc4] rounded-xl flex items-center justify-center text-[#a88b7a] text-sm italic shrink-0 font-serif">
-        No image
-      </div>
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={wine.name}
+          className="w-full sm:w-36 h-44 sm:h-36 rounded-xl object-cover"
+        />
+      ) : (
+        <div className="w-full sm:w-36 h-44 sm:h-36 bg-[#d9cfc4] rounded-xl flex items-center justify-center text-[#a88b7a] text-sm italic shrink-0 font-serif">
+          No image
+        </div>
+      )}
 
       <div className="flex-1 flex flex-col justify-between">
         <div>

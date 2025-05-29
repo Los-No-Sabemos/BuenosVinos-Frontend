@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../services/api";
 
 
-export default function AddGrapeForm({ onAdd }) {
+export default function AddGrape({ onAdd }) {
 
  const [name, setName] = useState("");
  const [description , setDescription] = useState("");

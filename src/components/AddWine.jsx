@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-export default function AddWineForm({ onAdd }) {
+export default function AddWine({ onAdd }) {
   const [name, setName] = useState("");
   const [year, setYear] = useState("");
   const [rating, setRating] = useState(10);
   const [notes, setNotes] = useState("");
   const [regionId, setRegionId] = useState("");
   const [grapeIds, setGrapeIds] = useState([]);
+  const [image, setImage] = useState(null); 
 
   const [regions, setRegions] = useState([]);
   const [grapes, setGrapes] = useState([]);
@@ -43,19 +44,21 @@ export default function AddWineForm({ onAdd }) {
     try {
       setError(null);
 
-      // 1. Create the wine
-      const res = await api.post("/api/wine", {
-        name,
-        year: Number(year),
-        rating: Number(rating),
-        notes,
-        regionId,
-        grapeIds,
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("year", Number(year));
+      formData.append("rating", Number(rating));
+      formData.append("notes", notes);
+      formData.append("regionId", regionId);
+      grapeIds.forEach((id) => formData.append("grapeIds", id));
+      if (image) formData.append("image", image);
+
+      const res = await api.post("/api/wine", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       const createdWine = res.data;
 
-      // 2. Save to cellar (with separate try/catch for better error clarity)
       try {
         await api.post(`/api/wine/save/${createdWine._id}`);
       } catch (saveErr) {
@@ -67,15 +70,16 @@ export default function AddWineForm({ onAdd }) {
         return;
       }
 
-      // Success: notify parent and reset form
       if (onAdd) onAdd(createdWine);
 
+      // Reset form
       setName("");
       setYear("");
       setRating(10);
       setNotes("");
       setRegionId("");
       setGrapeIds([]);
+      setImage(null);
       setError(null);
     } catch (err) {
       console.error("Failed to add wine:", err.response?.data || err.message);
@@ -177,7 +181,7 @@ export default function AddWineForm({ onAdd }) {
           ))}
         </select>
         <p className="text-xs text-gray-500 mt-1">
-          Hold Ctrl or ⌘ to select multiple
+          Hold Ctrl to select multiple
         </p>
       </div>
 
@@ -188,6 +192,16 @@ export default function AddWineForm({ onAdd }) {
           onChange={(e) => setNotes(e.target.value)}
           rows="3"
           className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-[#4b2e2e]">Wine Image</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
+          className="mt-1 block w-full text-sm text-gray-700"
         />
       </div>
 
