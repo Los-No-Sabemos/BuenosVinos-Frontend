@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+
 
 export default function AddWine({ onAdd }) {
   const [region, setRegion] = useState("");
@@ -57,6 +59,10 @@ export default function AddWine({ onAdd }) {
         setWineFestivals("");
         setImage("");
         setMap("");
+        toast.success("🎉 New region added!");
+          setTimeout(() => {
+            navigate(`/regions`);
+          }, 2000);
       
      
     
@@ -184,7 +190,9 @@ export default function AddWine({ onAdd }) {
         >
           Add Region
         </button>
+          <ToastContainer position="bottom-left" autoClose={1800} hideProgressBar={false}> New Region Added! </ToastContainer>
       </div>
+       
     </form>
   );
 }
