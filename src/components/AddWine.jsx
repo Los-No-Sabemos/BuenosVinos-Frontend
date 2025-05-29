@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function AddWineForm({ onAdd }) {
   const [name, setName] = useState("");
@@ -13,6 +15,9 @@ export default function AddWineForm({ onAdd }) {
   const [grapes, setGrapes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+   const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +81,14 @@ export default function AddWineForm({ onAdd }) {
       setNotes("");
       setRegionId("");
       setGrapeIds([]);
-      setError(null);
+      
+      toast.success("🎉 New wine added!");
+          setTimeout(() => {
+            navigate(`/my-cellar`);
+          }, 2000);
+
+    setError(null);
+
     } catch (err) {
       console.error("Failed to add wine:", err.response?.data || err.message);
       setError("Failed to add wine or save to cellar. Are you logged in?");
@@ -198,6 +210,7 @@ export default function AddWineForm({ onAdd }) {
         >
           Add Wine
         </button>
+        <ToastContainer position="bottom-left" autoClose={1800} hideProgressBar={false}> New Wine Added! </ToastContainer>
       </div>
     </form>
   );
