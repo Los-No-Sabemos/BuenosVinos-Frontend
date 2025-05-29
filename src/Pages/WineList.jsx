@@ -14,9 +14,7 @@ export default function WineList() {
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const res = await api.get(
-          `${import.meta.env.VITE_API_URL}/api/wine`,
-        );
+        const res = await api.get(`${import.meta.env.VITE_API_URL}/api/wine`);
         setWines(res.data);
       } catch (err) {
         console.error("Error fetching wines:", err);
@@ -45,42 +43,60 @@ export default function WineList() {
     navigate(`/wines/${wine._id}/edit`);
   };
 
- const handleSaveToCellar = async (wineId) => {
-  try {
-    await api.post(`${import.meta.env.VITE_API_URL}/api/wine/save/${wineId}`, null, {
-      headers: { Authorization: `Bearer ${storedToken}` }
-    });
-    alert("Wine saved to your cellar!");
-  } catch (err) {
-    console.error("Error saving wine:", err);
-    alert("Could not save wine.");
-  }
-};
+  const handleSaveToCellar = async (wineId) => {
+    try {
+      await api.post(
+        `${import.meta.env.VITE_API_URL}/api/wine/save/${wineId}`,
+        null,
+        { headers: { Authorization: `Bearer ${storedToken}` } }
+      );
+      alert("Wine saved to your cellar!");
+    } catch (err) {
+      console.error("Error saving wine:", err);
+      alert("Could not save wine.");
+    }
+  };
 
-  if (loading) return <p className="p-6">Loading wines...</p>;
+  if (loading)
+    return (
+      <p className="p-6 text-center italic text-[#a78a7f]" style={{ fontFamily: "'Merriweather', serif" }}>
+        Loading wines...
+      </p>
+    );
 
   return (
     <>
-      <div className="max-w-3xl mx-auto p-6 space-y-4">
-        <h1 className="text-3xl font-bold">All Wines</h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-[#fdf7f2] rounded-xl shadow-inner">
+        <h1
+          className="text-3xl sm:text-4xl font-bold text-center mb-6 text-[#4b2e2e]"
+          style={{ fontFamily: "'Cinzel', serif" }}
+        >
+          All Wines
+        </h1>
+
         {wines.length === 0 ? (
-          <p>No wines in the cellar yet</p>
+          <p
+            className="text-center text-gray-600"
+            style={{ fontFamily: "'Merriweather', serif" }}
+          >
+            No wines in the cellar yet
+          </p>
         ) : (
-          wines.map((wine) => (
-            <WineCard
-              key={wine._id}
-              wine={wine}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onSave={handleSaveToCellar}
-            />
-          ))
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {wines.map((wine) => (
+              <WineCard
+                key={wine._id}
+                wine={wine}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onSave={handleSaveToCellar}
+              />
+            ))}
+          </div>
         )}
       </div>
-      <div>
-        <Footer />
-      </div>
+
+      <Footer />
     </>
   );
-   
 }

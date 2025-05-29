@@ -31,17 +31,21 @@ function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fdf7f2] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8 border border-[#e6d3c5]">
-        <h2 className="text-3xl font-serif font-bold text-[#4b2e2e] text-center mb-6">
+    <div className="min-h-screen bg-[#fdfaf6] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 sm:p-8 border border-[#e6d3c5]">
+        <h2
+          className="text-2xl sm:text-3xl text-center mb-6"
+          style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "#800020" }}
+        >
           Create Your Account
         </h2>
 
-        <form onSubmit={handleSignupSubmit} className="space-y-4">
+        <form onSubmit={handleSignupSubmit} className="space-y-4" style={{ fontFamily: "'Lato', sans-serif" }}>
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-[#4b2e2e]"
+              className="block text-sm font-medium"
+              style={{ color: "#800020" }}
             >
               Username
             </label>
@@ -51,15 +55,17 @@ function SignupPage() {
               name="username"
               value={username}
               onChange={handleUserName}
-              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#800020] focus:ring-[#800020]"
               required
+              style={{ fontFamily: "'Lato', sans-serif" }}
             />
           </div>
 
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-[#4b2e2e]"
+              className="block text-sm font-medium"
+              style={{ color: "#800020" }}
             >
               Email
             </label>
@@ -69,15 +75,17 @@ function SignupPage() {
               name="email"
               value={email}
               onChange={handleEmail}
-              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#800020] focus:ring-[#800020]"
               required
+              style={{ fontFamily: "'Lato', sans-serif" }}
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-[#4b2e2e]"
+              className="block text-sm font-medium"
+              style={{ color: "#800020" }}
             >
               Password
             </label>
@@ -87,31 +95,30 @@ function SignupPage() {
               name="password"
               value={password}
               onChange={handlePassword}
-              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-[#800020] focus:ring-[#800020]"
               required
+              style={{ fontFamily: "'Lato', sans-serif" }}
             />
           </div>
 
           {errorMessage && (
-            <p className="text-sm text-red-600 text-center mt-2">
+            <p className="text-sm text-red-600 text-center mt-2" style={{ fontFamily: "'Lato', sans-serif" }}>
               {errorMessage}
             </p>
           )}
 
           <button
             type="submit"
-            className="w-full bg-[#764134] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#5e332a] transition duration-200"
+            className="w-full bg-[#800020] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#a52a2a] transition duration-200"
+            style={{ fontFamily: "'Lato', sans-serif" }}
           >
             Create Account
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm text-gray-600" style={{ fontFamily: "'Lato', sans-serif" }}>
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-[#764134] hover:underline font-medium"
-          >
+          <Link to="/login" className="text-[#800020] hover:underline font-medium">
             Log in
           </Link>
         </p>

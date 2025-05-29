@@ -6,37 +6,59 @@ export default function WineCard({ wine, onEdit, onDelete, onSave }) {
   const isCreator = user?._id === wine.userId;
 
   return (
-    <div className="flex gap-6 bg-[#fdf7f2] border border-[#e6d3c5] rounded-2xl shadow-md p-4 hover:shadow-lg transition">
-      
-      {/*placeholder for now need to update model backend */}
-      <div className="w-32 h-32 bg-[#e9dbd0] rounded-lg flex items-center justify-center text-[#a78a7f] text-sm italic">
-        {/* <img src={wine.image} /> */}
+    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 bg-[#f9f5f1] border border-[#cbbba0] rounded-3xl shadow-lg p-6 hover:shadow-xl transition w-full">
+
+      {/* Placeholder image */}
+      <div className="w-full sm:w-36 h-44 sm:h-36 bg-[#d9cfc4] rounded-xl flex items-center justify-center text-[#a88b7a] text-sm italic shrink-0 font-serif">
         No image
       </div>
 
-      
-      <div className="flex-1">
-        <h2 className="text-2xl font-serif font-semibold text-[#4b2e2e]">
-          {wine.name} <span className="text-[#a78a7f] text-lg">({wine.year})</span>
-        </h2>
+      <div className="flex-1 flex flex-col justify-between">
+        <div>
+          <h2
+            className="text-3xl font-semibold text-[#5a3a2b] tracking-wide"
+            style={{ fontFamily: "'Mrs Saint Delafield', serif", lineHeight: 1.1 }}
+          >
+            {wine.name}{" "}
+            <span
+              className="text-[#b2947d] text-xl"
+              style={{ fontFamily: "'Lora', serif", fontWeight: "500" }}
+            >
+              ({wine.year})
+            </span>
+          </h2>
 
-        <p className="mt-1 text-[#7c4a3a] font-medium">Rating: {wine.rating}/10</p>
+          <p
+            className="mt-2 text-[#7a5b47] text-lg"
+            style={{ fontFamily: "'Lora', serif", fontWeight: "600" }}
+          >
+            Rating: {wine.rating}/10
+          </p>
 
-        <p className="text-[#4b3b38] italic text-sm mt-2">{wine.notes}</p>
+          <p
+            className="text-[#6f5a44] italic text-base mt-3 leading-relaxed"
+            style={{ fontFamily: "'Lora', serif", fontStyle: "italic" }}
+          >
+            {wine.notes}
+          </p>
+        </div>
 
         {isLoggedIn && (
-          <div className="pt-4 flex flex-wrap gap-3">
+          <div
+            className="mt-6 flex flex-col sm:flex-row sm:justify-start sm:items-center gap-3 sm:gap-4"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          >
             {isCreator ? (
               <>
                 <button
                   onClick={() => onEdit(wine)}
-                  className="px-4 py-2 bg-[#764134] text-white rounded-lg hover:bg-[#5e332a] transition"
+                  className="px-6 py-2 sm:py-2.5 bg-[#8c6846] text-white rounded-full shadow hover:bg-[#7a5738] transition duration-300 font-semibold text-base sm:text-lg"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => onDelete(wine._id)}
-                  className="px-4 py-2 bg-[#9a2c2c] text-white rounded-lg hover:bg-[#7f2323] transition"
+                  className="px-6 py-2 sm:py-2.5 bg-[#a53834] text-white rounded-full shadow hover:bg-[#872b2a] transition duration-300 font-semibold text-base sm:text-lg"
                 >
                   Delete
                 </button>
@@ -44,7 +66,7 @@ export default function WineCard({ wine, onEdit, onDelete, onSave }) {
             ) : (
               <button
                 onClick={() => onSave(wine._id)}
-                className="px-4 py-2 bg-[#556b2f] text-white rounded-lg hover:bg-[#445522] transition"
+                className="px-6 py-2 sm:py-2.5 bg-[#5a7836] text-white rounded-full shadow hover:bg-[#48632b] transition duration-300 font-semibold text-base sm:text-lg"
               >
                 Save to My Cellar
               </button>
