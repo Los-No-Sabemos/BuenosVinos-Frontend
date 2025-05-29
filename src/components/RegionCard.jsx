@@ -20,7 +20,7 @@ export default function RegionCard({ region}) {
    
         <div className="region-card">
       <header className="mb-4">
-        <h2 className="text-2xl font-serif text-[#800020] font-semibold">
+        <h2 className="mt-8 text-2xl font-serif text-[#800020] font-semibold">
           {region.region}
           <span className="text-gray-600 text-lg ml-2">({region.country})</span>
         </h2>

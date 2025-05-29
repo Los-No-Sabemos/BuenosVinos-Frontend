@@ -22,7 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/add-wine" element={<IsPrivate><AddWine /></IsPrivate>} />
         <Route path="/grapes" element={<IsPrivate><GrapeList /></IsPrivate>} />
-        <Route path="/regions" element={<isPrivate> <RegionList /></isPrivate>}/>
+        <Route path="/regions" element={<IsPrivate> <RegionList /></IsPrivate>}/>
         <Route path="/add-region" element={<IsPrivate><AddRegion /></IsPrivate>} />
         <Route path="/add-grape" element={<IsPrivate><AddGrape /></IsPrivate>} />
         <Route path="/" element={<WineList />} />
