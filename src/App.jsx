@@ -13,7 +13,7 @@ import RegionList from "./Pages/RegionList";
 import EditWinePage from "./Pages/EditWinePage";
 import MyCellarPage from "./Pages/MyCellarPage"; 
 import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
+
 
 export default function App() {
   return (
