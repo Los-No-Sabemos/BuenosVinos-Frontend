@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
 export default function MyCellarPage() {
   const [wines, setWines] = useState([]);
   const [filteredRegion, setFilteredRegion] = useState("");
@@ -59,9 +57,7 @@ export default function MyCellarPage() {
         My Wine Cellar
       </h1>
 
-      {error && (
-        <p className="text-red-600 text-center mb-4">{error}</p>
-      )}
+      {error && <p className="text-red-600 text-center mb-4">{error}</p>}
 
       <div className="mb-8">
         <label className="block mb-2 text-lg font-medium text-[#5a3d31]">
@@ -82,25 +78,28 @@ export default function MyCellarPage() {
       </div>
 
       {filteredWines.length === 0 ? (
-        <p className="text-center text-gray-600 italic">
-          No wines to display.
-        </p>
+        <p className="text-center text-gray-600 italic">No wines to display.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredWines.map((wine) => {
-            const imageUrl = wine.image ? `${baseURL}${wine.image}` : null;
+            const imageUrl = wine.image || null;
 
             return (
               <div
                 key={wine._id}
                 className="bg-[#fffaf5] border border-[#e6d3c5] p-6 rounded-2xl shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between"
               >
-                {imageUrl && (
+                {imageUrl ? (
                   <img
                     src={imageUrl}
                     alt={wine.name}
                     className="w-full h-48 object-cover rounded-xl mb-4"
+                    onError={(e) => (e.target.src = "/placeholder.png")}
                   />
+                ) : (
+                  <div className="w-full h-48 bg-[#d9cfc4] rounded-xl flex items-center justify-center text-[#a88b7a] italic font-serif">
+                    No image
+                  </div>
                 )}
 
                 <div>

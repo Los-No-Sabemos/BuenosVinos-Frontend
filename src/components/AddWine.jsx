@@ -10,15 +10,14 @@ export default function AddWine({ onAdd }) {
   const [notes, setNotes] = useState("");
   const [regionId, setRegionId] = useState("");
   const [grapeIds, setGrapeIds] = useState([]);
-  const [image, setImage] = useState(null); 
+  const [imageUrl, setImageUrl] = useState("");
 
   const [regions, setRegions] = useState([]);
   const [grapes, setGrapes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-   const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,28 +48,23 @@ export default function AddWine({ onAdd }) {
     try {
       setError(null);
 
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("year", Number(year));
-      formData.append("rating", Number(rating));
-      formData.append("notes", notes);
-      formData.append("regionId", regionId);
-      grapeIds.forEach((id) => formData.append("grapeIds", id));
-      if (image) formData.append("image", image);
+      const newWineData = {
+        name,
+        year: Number(year),
+        rating: Number(rating),
+        notes,
+        regionId,
+        grapeIds,
+        image: imageUrl,
+      };
 
-      const res = await api.post("/api/wine", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
+      const res = await api.post("/api/wine", newWineData);
       const createdWine = res.data;
 
       try {
         await api.post(`/api/wine/save/${createdWine._id}`);
       } catch (saveErr) {
-        console.error(
-          "Failed to save wine to cellar:",
-          saveErr.response?.data || saveErr.message
-        );
+        console.error("Failed to save wine to cellar:", saveErr.response?.data || saveErr.message);
         setError("Wine created, but failed to save to cellar.");
         return;
       }
@@ -84,23 +78,19 @@ export default function AddWine({ onAdd }) {
       setNotes("");
       setRegionId("");
       setGrapeIds([]);
-      
+      setImageUrl("");
+
       toast.success("🎉 New wine added!");
-          setTimeout(() => {
-            navigate(`/my-cellar`);
-          }, 2000);
-
-      setImage(null);
-    setError(null);
-
+      setTimeout(() => {
+        navigate(`/my-cellar`);
+      }, 2000);
     } catch (err) {
       console.error("Failed to add wine:", err.response?.data || err.message);
       setError("Failed to add wine or save to cellar. Are you logged in?");
     }
   };
 
-  if (loading)
-    return <p className="text-center text-gray-500">Loading form data...</p>;
+  if (loading) return <p className="text-center text-gray-500">Loading form data...</p>;
 
   return (
     <form
@@ -179,9 +169,7 @@ export default function AddWine({ onAdd }) {
           multiple
           value={grapeIds}
           onChange={(e) =>
-            setGrapeIds(
-              Array.from(e.target.selectedOptions, (option) => option.value)
-            )
+            setGrapeIds(Array.from(e.target.selectedOptions, (option) => option.value))
           }
           required
           className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 bg-white focus:border-[#9a6c4a] focus:ring-[#9a6c4a]"
@@ -193,7 +181,7 @@ export default function AddWine({ onAdd }) {
           ))}
         </select>
         <p className="text-xs text-gray-500 mt-1">
-          Hold Ctrl to select multiple
+          Hold Ctrl (or Cmd) to select multiple
         </p>
       </div>
 
@@ -208,12 +196,13 @@ export default function AddWine({ onAdd }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-[#4b2e2e]">Wine Image</label>
+        <label className="block text-sm font-medium text-[#4b2e2e]">Wine Image URL</label>
         <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-          className="mt-1 block w-full text-sm text-gray-700"
+          type="url"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder="https://example.com/image.jpg"
+          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2"
         />
       </div>
 
@@ -224,7 +213,9 @@ export default function AddWine({ onAdd }) {
         >
           Add Wine
         </button>
-        <ToastContainer position="bottom-left" autoClose={1800} hideProgressBar={false}> New Wine Added! </ToastContainer>
+        <ToastContainer position="bottom-left" autoClose={1800} hideProgressBar={false}>
+          New Wine Added!
+        </ToastContainer>
       </div>
     </form>
   );

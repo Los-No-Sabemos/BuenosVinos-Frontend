@@ -13,14 +13,11 @@ export default function EditWinePage() {
     year: "",
     rating: "",
     notes: "",
-    image: "", // existing image path
-    userId: "", // for auth check
+    image: "",
+    userId: "",
   });
 
-  const [newImage, setNewImage] = useState(null); // new image file
-  const [previewUrl, setPreviewUrl] = useState(null); // local preview
   const [loading, setLoading] = useState(true);
-
   const storedToken = localStorage.getItem("authToken");
 
   useEffect(() => {
@@ -35,7 +32,6 @@ export default function EditWinePage() {
           navigate("/");
           return;
         }
-
         setWineData({
           name: wine.name,
           year: wine.year,
@@ -58,35 +54,14 @@ export default function EditWinePage() {
     setWineData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setNewImage(file);
-    if (file) {
-      const preview = URL.createObjectURL(file);
-      setPreviewUrl(preview);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const formData = new FormData();
-      formData.append("name", wineData.name);
-      formData.append("year", wineData.year);
-      formData.append("rating", wineData.rating);
-      formData.append("notes", wineData.notes);
-      if (newImage) {
-        formData.append("image", newImage);
-      }
-
-      await api.put(`/api/wine/${wineId}`, formData, {
+      await api.put(`/api/wine/${wineId}`, wineData, {
         headers: {
           Authorization: `Bearer ${storedToken}`,
-          "Content-Type": "multipart/form-data",
         },
       });
-
       alert("Wine updated successfully!");
       navigate("/");
     } catch (err) {
@@ -99,17 +74,11 @@ export default function EditWinePage() {
     return <p className="text-center text-gray-500 mt-8">Loading wine data...</p>;
   }
 
-  const existingImageUrl = wineData.image
-    ? `${import.meta.env.VITE_API_URL}${wineData.image}`
-    : null;
-
   return (
     <div className="max-w-2xl mx-auto p-6 bg-[#fdf7f2] border border-[#e6d3c5] rounded-2xl shadow-md">
-      <h1 className="text-3xl font-serif font-bold text-[#4b2e2e] mb-6">
-        Edit Wine
-      </h1>
+      <h1 className="text-3xl font-serif font-bold text-[#4b2e2e] mb-6">Edit Wine</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-5" encType="multipart/form-data">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block text-sm font-medium text-[#4b2e2e] mb-1">Name*</label>
           <input
@@ -159,30 +128,24 @@ export default function EditWinePage() {
           />
         </div>
 
-        {previewUrl ? (
-          <div>
-            <p className="text-[#4b2e2e] font-medium mb-1">New Image Preview:</p>
-            <img src={previewUrl} alt="Preview" className="w-40 h-auto rounded mb-2" />
-          </div>
-        ) : existingImageUrl ? (
-          <div>
-            <p className="text-[#4b2e2e] font-medium mb-1">Current Image:</p>
-            <img src={existingImageUrl} alt="Wine" className="w-40 h-auto rounded mb-2" />
-          </div>
-        ) : (
-          <p className="text-sm text-gray-500 italic">No image uploaded yet.</p>
-        )}
-
         <div>
-          <label className="block text-sm font-medium text-[#4b2e2e] mb-1">
-            Upload New Image
-          </label>
+          <label className="block text-sm font-medium text-[#4b2e2e] mb-1">Image URL</label>
           <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="block w-full text-sm text-gray-500"
+            type="url"
+            name="image"
+            value={wineData.image}
+            onChange={handleChange}
+            placeholder="https://example.com/image.jpg"
+            className="w-full rounded-md border border-gray-300 shadow-sm p-2"
           />
+          {wineData.image && (
+            <img
+              src={wineData.image}
+              alt="Wine"
+              className="mt-2 w-40 h-auto rounded border"
+              onError={(e) => (e.target.src = "/placeholder.png")}
+            />
+          )}
         </div>
 
         <div className="text-right">

@@ -4,15 +4,19 @@ import { AuthContext } from "../context/auth.context";
 export default function WineCard({ wine, onEdit, onDelete, onSave }) {
   const { user, isLoggedIn } = useContext(AuthContext);
   const isCreator = user?._id === wine.userId;
-  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-  const imageUrl = wine.image ? `${baseURL}${wine.image}` : null;
+  const imageUrl = wine.image || null; // just the URL from DB, no baseURL
+
+  const handleImageError = (e) => {
+    e.target.src = "/placeholder.png"; // fallback image in public folder
+  };
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 bg-[#f9f5f1] border border-[#cbbba0] rounded-3xl shadow-lg p-6 hover:shadow-xl transition w-full">
       {imageUrl ? (
         <img
           src={imageUrl}
-          alt={wine.name}
+          alt={wine.name || "Wine image"}
+          onError={handleImageError}
           className="w-full sm:w-36 h-44 sm:h-36 rounded-xl object-cover"
         />
       ) : (
@@ -25,7 +29,7 @@ export default function WineCard({ wine, onEdit, onDelete, onSave }) {
         <div>
           <h2
             className="text-3xl font-semibold text-[#5a3a2b] tracking-wide"
-            style={{fontFamily: "'Great Vibes', cursive", lineHeight: 1.2}}
+            style={{ fontFamily: "'Great Vibes', cursive", lineHeight: 1.2 }}
           >
             {wine.name}{" "}
             <span
@@ -43,12 +47,14 @@ export default function WineCard({ wine, onEdit, onDelete, onSave }) {
             Rating: {wine.rating}/10
           </p>
 
-          <p
-            className="text-[#6f5a44] italic text-base mt-3 leading-relaxed"
-            style={{ fontFamily: "'Lora', serif", fontStyle: "italic" }}
-          >
-            {wine.notes}
-          </p>
+          {wine.notes && (
+            <p
+              className="text-[#6f5a44] italic text-base mt-3 leading-relaxed"
+              style={{ fontFamily: "'Lora', serif", fontStyle: "italic" }}
+            >
+              {wine.notes.length > 150 ? `${wine.notes.slice(0, 150)}...` : wine.notes}
+            </p>
+          )}
         </div>
 
         {isLoggedIn && (
@@ -61,12 +67,14 @@ export default function WineCard({ wine, onEdit, onDelete, onSave }) {
                 <button
                   onClick={() => onEdit(wine)}
                   className="px-6 py-2 sm:py-2.5 bg-[#8c6846] text-white rounded-full shadow hover:bg-[#7a5738] transition duration-300 font-semibold text-base sm:text-lg"
+                  aria-label={`Edit wine ${wine.name}`}
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => onDelete(wine._id)}
                   className="px-6 py-2 sm:py-2.5 bg-[#a53834] text-white rounded-full shadow hover:bg-[#872b2a] transition duration-300 font-semibold text-base sm:text-lg"
+                  aria-label={`Delete wine ${wine.name}`}
                 >
                   Delete
                 </button>
@@ -75,6 +83,7 @@ export default function WineCard({ wine, onEdit, onDelete, onSave }) {
               <button
                 onClick={() => onSave(wine._id)}
                 className="px-6 py-2 sm:py-2.5 bg-[#5a7836] text-white rounded-full shadow hover:bg-[#48632b] transition duration-300 font-semibold text-base sm:text-lg"
+                aria-label={`Save wine ${wine.name} to My Cellar`}
               >
                 Save to My Cellar
               </button>
