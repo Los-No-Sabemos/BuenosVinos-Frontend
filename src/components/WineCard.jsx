@@ -25,7 +25,7 @@ export default function WineCard({ wine, onEdit, onDelete, onSave }) {
         <div>
           <h2
             className="text-3xl font-semibold text-[#5a3a2b] tracking-wide"
-            style={{ fontFamily: "'Mrs Saint Delafield', serif", lineHeight: 1.1 }}
+            style={{fontFamily: "'Great Vibes', cursive", lineHeight: 1.2}}
           >
             {wine.name}{" "}
             <span

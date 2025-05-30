@@ -18,8 +18,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#800020] text-white py-8">
-      <div className="container mx-auto px-4">
-
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="space-y-4">
           <div className="flex items-center mb-4">
             <h2 className="text-3xl font-serif font-bold">Buenos Vinos</h2>
@@ -37,7 +36,6 @@ export default function Footer() {
             alt="Wine background"
             className="w-full h-full object-cover"
           />
-       
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/60 rounded-lg pointer-events-none" />
         </div>
 
@@ -45,9 +43,12 @@ export default function Footer() {
           <h3 className="text-xl font-serif font-semibold border-b pb-2 mb-4 text-center">
             Featured Wines
           </h3>
-          <div className="flex justify-center space-x-6">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
             {featuredWines.map((wine) => (
-              <div key={wine._id} className="flex items-center space-x-3 group bg-[#a9736e33] rounded-lg px-4 py-2">
+              <div
+                key={wine._id}
+                className="flex items-center space-x-3 group bg-[#a9736e33] rounded-lg px-4 py-2 max-w-xs w-full sm:w-auto"
+              >
                 <div className="relative">
                   <div className="w-16 h-16 bg-[#e9dbd0] rounded-lg flex items-center justify-center">
                     <span className="text-[#a78a7f] text-xs">No image</span>
@@ -58,7 +59,8 @@ export default function Footer() {
                 </div>
                 <div>
                   <h4 className="font-medium group-hover:underline mr-8 mb-1 text-[#f3e5e1]">
-                    {wine.name} <p className="text-white/70 inline">({wine.year})</p>
+                    {wine.name}{" "}
+                    <p className="text-white/70 inline">({wine.year})</p>
                   </h4>
                   <p className="text-sm text-white/80">{wine.region}</p>
                 </div>
@@ -67,7 +69,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center mt-12 px-4 max-w-3xl mx-auto text-center">
+        <div className="flex flex-col items-center mt-12 px-4 sm:px-6 max-w-3xl mx-auto text-center">
           <h3 className="text-xl font-serif font-semibold border-b pb-2 mb-4">About The Team</h3>
           <p className="text-justify text-white/90">
             Buenos Vinos was created by Florian Wunsch and Eliana Depietri, two passionate web development students
@@ -77,7 +79,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container mx-auto text-center mt-10">
+      <div className="container mx-auto text-center mt-10 px-4 sm:px-6">
         <p className="text-sm text-white/80">
           &copy; {new Date().getFullYear()} Buenos Vinos. All rights reserved.
         </p>
