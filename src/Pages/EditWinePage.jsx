@@ -13,10 +13,14 @@ export default function EditWinePage() {
     year: "",
     rating: "",
     notes: "",
-    image: "", // just storing filename/URL
+    image: "", // existing image path
+    userId: "", // for auth check
   });
-  const [newImage, setNewImage] = useState(null); // for newly uploaded image
+
+  const [newImage, setNewImage] = useState(null); // new image file
+  const [previewUrl, setPreviewUrl] = useState(null); // local preview
   const [loading, setLoading] = useState(true);
+
   const storedToken = localStorage.getItem("authToken");
 
   useEffect(() => {
@@ -25,18 +29,20 @@ export default function EditWinePage() {
         headers: { Authorization: `Bearer ${storedToken}` },
       })
       .then((res) => {
-        if (res.data.userId !== user?._id) {
+        const wine = res.data;
+        if (wine.userId !== user?._id) {
           alert("You are not authorized to edit this wine.");
           navigate("/");
           return;
         }
 
         setWineData({
-          name: res.data.name,
-          year: res.data.year,
-          rating: res.data.rating,
-          notes: res.data.notes,
-          image: res.data.image || "",
+          name: wine.name,
+          year: wine.year,
+          rating: wine.rating,
+          notes: wine.notes,
+          image: wine.image || "",
+          userId: wine.userId,
         });
       })
       .catch((err) => {
@@ -53,7 +59,12 @@ export default function EditWinePage() {
   };
 
   const handleImageChange = (e) => {
-    setNewImage(e.target.files[0]);
+    const file = e.target.files[0];
+    setNewImage(file);
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setPreviewUrl(preview);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -84,10 +95,11 @@ export default function EditWinePage() {
     }
   };
 
-  if (loading)
+  if (loading) {
     return <p className="text-center text-gray-500 mt-8">Loading wine data...</p>;
+  }
 
-  const imageUrl = wineData.image
+  const existingImageUrl = wineData.image
     ? `${import.meta.env.VITE_API_URL}${wineData.image}`
     : null;
 
@@ -123,9 +135,7 @@ export default function EditWinePage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[#4b2e2e] mb-1">
-            Rating (1–10)*
-          </label>
+          <label className="block text-sm font-medium text-[#4b2e2e] mb-1">Rating (1–10)*</label>
           <input
             type="number"
             name="rating"
@@ -149,11 +159,18 @@ export default function EditWinePage() {
           />
         </div>
 
-        {imageUrl && (
+        {previewUrl ? (
+          <div>
+            <p className="text-[#4b2e2e] font-medium mb-1">New Image Preview:</p>
+            <img src={previewUrl} alt="Preview" className="w-40 h-auto rounded mb-2" />
+          </div>
+        ) : existingImageUrl ? (
           <div>
             <p className="text-[#4b2e2e] font-medium mb-1">Current Image:</p>
-            <img src={imageUrl} alt="Wine" className="w-40 h-auto rounded mb-2" />
+            <img src={existingImageUrl} alt="Wine" className="w-40 h-auto rounded mb-2" />
           </div>
+        ) : (
+          <p className="text-sm text-gray-500 italic">No image uploaded yet.</p>
         )}
 
         <div>
