@@ -186,7 +186,7 @@ export default function AddWine({ onAdd }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-[#4b2e2e]">Notes</label>
+        <label className="block text-sm font-medium text-[#4b2e2e]">Notes*</label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}

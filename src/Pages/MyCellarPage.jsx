@@ -1,55 +1,61 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import api from '../services/api'
+
+const fetchMyCellar = () =>
+  api.get('/api/wine/my-cellar').then(res => res.data)
 
 export default function MyCellarPage() {
-  const [wines, setWines] = useState([]);
-  const [filteredRegion, setFilteredRegion] = useState("");
-  const [error, setError] = useState(null);
+  const [filteredRegion, setFilteredRegion] = useState('')
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    api
-      .get("/api/wine/my-cellar")
-      .then((response) => {
-        if (Array.isArray(response.data)) {
-          const validWines = response.data.filter(
-            (wine) => wine && wine.regionId
-          );
-          setWines(validWines);
-        } else {
-          console.error("Unexpected response:", response.data);
-          setError("Unexpected server response.");
-        }
-      })
-      .catch((err) => {
-        console.error("Error fetching your wines:", err);
-        setError("Could not load your wine cellar.");
-      });
-  }, []);
+  
+  const {
+    data: wines = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['myCellar'],
+    queryFn: fetchMyCellar,
+  })
+
+ 
+  const removeMutation = useMutation({
+    mutationFn: (wineId) => api.delete(`/api/wine/save/${wineId}`),
+    onSuccess: (_data, wineId) => {
+      queryClient.setQueryData(
+        ['myCellar'],
+        (old = []) => old.filter((w) => w._id !== wineId)
+      )
+    },
+  })
+
+  
+  const toggleVisibilityMutation = useMutation({
+    mutationFn: ({ id, current }) =>
+      api.patch(`/api/wine/${id}/visibility`, { public: !current }),
+    onSuccess: ({ data: updated }) => {
+      // update local cellar list
+      queryClient.setQueryData(
+        ['myCellar'],
+        (old = []) => old.map((w) => (w._id === updated._id ? updated : w))
+      )
+      // invalidate public list so WineList refetches
+      queryClient.invalidateQueries({ queryKey: ['publicWines'] })
+    },
+  })
+
+  if (isLoading) return <p>Loading your cellar…</p>
+  if (isError)
+    return <p className="text-red-600">Error: {error.message}</p>
 
   const uniqueRegions = Array.from(
-    new Set(
-      wines.map((wine) =>
-        wine?.regionId?.region ? wine.regionId.region : "Unknown"
-      )
-    )
-  );
-
+    new Set(wines.map((w) => w.regionId?.region || 'Unknown'))
+  )
   const filteredWines = filteredRegion
-    ? wines.filter((wine) => wine.regionId?.region === filteredRegion)
-    : wines;
-
-  const handleRemove = (wineId) => {
-    api
-      .delete(`/api/wine/${wineId}`)
-      .then(() => {
-        setWines((prevWines) => prevWines.filter((wine) => wine._id !== wineId));
-        alert("Wine removed from cellar.");
-      })
-      .catch((err) => {
-        console.error("Error deleting wine:", err);
-        alert("Failed to remove wine.");
-      });
-  };
+    ? wines.filter((w) => w.regionId?.region === filteredRegion)
+    : wines
 
   return (
     <div className="px-4 py-6 sm:px-6 lg:px-8 max-w-6xl mx-auto font-serif">
@@ -57,8 +63,7 @@ export default function MyCellarPage() {
         My Wine Cellar
       </h1>
 
-      {error && <p className="text-red-600 text-center mb-4">{error}</p>}
-
+      {/* Filter */}
       <div className="mb-8">
         <label className="block mb-2 text-lg font-medium text-[#5a3d31]">
           Filter by Region:
@@ -78,64 +83,81 @@ export default function MyCellarPage() {
       </div>
 
       {filteredWines.length === 0 ? (
-        <p className="text-center text-gray-600 italic">No wines to display.</p>
+        <p className="text-center text-gray-600 italic">
+          No wines to display.
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredWines.map((wine) => {
-            const imageUrl = wine.image || null;
-
-            return (
-              <div
-                key={wine._id}
-                className="bg-[#fffaf5] border border-[#e6d3c5] p-6 rounded-2xl shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between"
-              >
-                {imageUrl ? (
-                  <img
-                    src={imageUrl}
-                    alt={wine.name}
-                    className="w-full h-48 object-cover rounded-xl mb-4"
-                    onError={(e) => (e.target.src = "/placeholder.png")}
-                  />
-                ) : (
-                  <div className="w-full h-48 bg-[#d9cfc4] rounded-xl flex items-center justify-center text-[#a88b7a] italic font-serif">
-                    No image
-                  </div>
-                )}
-
-                <div>
-                  <h2 className="text-xl font-semibold mb-2 text-[#5a3d31]">
-                    {wine.name}
-                  </h2>
-                  <p className="text-[#4b2e2e] mb-1">
-                    <span className="font-medium">Region:</span>{" "}
-                    {wine.regionId?.region || "Unknown"}
-                  </p>
-                  <p className="text-[#4b2e2e] mb-1">
-                    <span className="font-medium">Grapes:</span>{" "}
-                    {wine.grapeIds?.map((grape) => grape.name).join(", ") || "N/A"}
-                  </p>
-                  <p className="text-[#4b2e2e] mb-1">
-                    <span className="font-medium">Year:</span> {wine.year}
-                  </p>
-                  <p className="text-[#4b2e2e] mb-1">
-                    <span className="font-medium">Rating:</span> {wine.rating}/10
-                  </p>
-                  <p className="text-[#4b2e2e]">
-                    <span className="font-medium">Notes:</span> {wine.notes}
-                  </p>
+          {filteredWines.map((wine) => (
+            <div
+              key={wine._id}
+              className="bg-[#fffaf5] border border-[#e6d3c5] p-6 rounded-2xl shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between"
+            >
+              {/* Image */}
+              {wine.image ? (
+                <img
+                  src={wine.image}
+                  alt={wine.name}
+                  className="w-full h-48 object-cover rounded-xl mb-4"
+                  onError={(e) => (e.target.src = '/placeholder.png')}
+                />
+              ) : (
+                <div className="w-full h-48 bg-[#d9cfc4] rounded-xl flex items-center justify-center text-[#a88b7a] italic font-serif mb-4">
+                  No image
                 </div>
+              )}
 
-                <button
-                  onClick={() => handleRemove(wine._id)}
-                  className="mt-4 bg-[#b03a2e] hover:bg-[#922d23] text-white py-2 px-4 rounded-lg shadow-md transition duration-200 self-start"
-                >
-                  Remove from Cellar
-                </button>
+              {/* Details */}
+              <div>
+                <h2 className="text-xl font-semibold mb-2 text-[#5a3d31]">
+                  {wine.name}
+                </h2>
+                <p className="text-[#4b2e2e] mb-1">
+                  <span className="font-medium">Region:</span> {wine.regionId?.region || 'Unknown'}
+                </p>
+                <p className="text-[#4b2e2e] mb-1">
+                  <span className="font-medium">Grapes:</span> {wine.grapeIds?.map((g) => g.name).join(', ') || 'N/A'}
+                </p>
+                <p className="text-[#4b2e2e] mb-1">
+                  <span className="font-medium">Year:</span> {wine.year}
+                </p>
+                <p className="text-[#4b2e2e] mb-1">
+                  <span className="font-medium">Rating:</span> {wine.rating}/10
+                </p>
+                <p className="text-[#4b2e2e]">
+                  <span className="font-medium">Notes:</span> {wine.notes}
+                </p>
               </div>
-            );
-          })}
+
+              {/* Visibility toggle */}
+              <label className="mt-4 flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={wine.public}
+                  disabled={toggleVisibilityMutation.isLoading}
+                  onChange={() =>
+                    toggleVisibilityMutation.mutate({
+                      id: wine._id,
+                      current: wine.public,
+                    })
+                  }
+                  className="form-checkbox h-5 w-5 text-[#800020]"
+                />
+                <span className="text-[#4b2e2e]">Public</span>
+              </label>
+
+              {/* Remove */}
+              <button
+                onClick={() => removeMutation.mutate(wine._id)}
+                disabled={removeMutation.isLoading}
+                className="mt-4 bg-[#b03a2e] hover:bg-[#922d23] text-white py-2 px-4 rounded-lg shadow-md transition duration-200 self-start"
+              >
+                Remove from Cellar
+              </button>
+            </div>
+          ))}
         </div>
       )}
     </div>
-  );
+  )
 }
