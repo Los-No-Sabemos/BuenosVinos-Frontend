@@ -4,10 +4,10 @@ import { AuthContext } from "../context/auth.context";
 export default function WineCard({ wine, onEdit, onDelete, onSave }) {
   const { user, isLoggedIn } = useContext(AuthContext);
   const isCreator = user?._id === wine.userId;
-  const imageUrl = wine.image || null; // just the URL from DB, no baseURL
+  const imageUrl = wine.image || null; 
 
   const handleImageError = (e) => {
-    e.target.src = "/placeholder.png"; // fallback image in public folder
+    e.target.src = "/placeholder.png"; // fallback image
   };
 
   return (

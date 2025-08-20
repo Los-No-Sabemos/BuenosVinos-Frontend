@@ -12,7 +12,7 @@ export default function WineList() {
   const navigate = useNavigate()
   const storedToken = localStorage.getItem('authToken')
 
-  // ▶️ useQuery with the object signature
+  
   const {
     data: wines = [],
     isLoading,

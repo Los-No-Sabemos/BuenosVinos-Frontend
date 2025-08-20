@@ -11,11 +11,11 @@ function AuthProviderWrapper(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
 
-  const storeToken = (token) => {       //  <==  ADD
+  const storeToken = (token) => {     
     localStorage.setItem('authToken', token);
   }
   
-  const authenticateUser = () => {           //  <==  ADD  
+  const authenticateUser = () => {         
     // Get the stored token from the localStorage
     const storedToken = localStorage.getItem('authToken');
     
@@ -27,7 +27,7 @@ function AuthProviderWrapper(props) {
         { headers: { Authorization: `Bearer ${storedToken}`} }
       )
       .then((response) => {
-        // If the server verifies that the JWT token is valid  ✅
+        // If the server verifies that the JWT token is valid  
         const user = response.data;
        // Update state variables        
         setIsLoggedIn(true);
@@ -35,7 +35,7 @@ function AuthProviderWrapper(props) {
         setUser(user);        
       })
       .catch((error) => {
-        // If the server sends an error response (invalid token) ❌
+        // If the server sends an error response (invalid token) 
         // Update state variables         
         setIsLoggedIn(false);
         setIsLoading(false);
@@ -49,13 +49,13 @@ function AuthProviderWrapper(props) {
     }   
   }
 
-  const removeToken = () => {                    // <== ADD
+  const removeToken = () => {                    
     // Upon logout, remove the token from the localStorage
     localStorage.removeItem("authToken");
   }
  
  
-  const logOutUser = () => {                   // <== ADD    
+  const logOutUser = () => {                   
     // To log out the user, remove the token
     removeToken();
     // and update the state variables    
@@ -63,7 +63,7 @@ function AuthProviderWrapper(props) {
   }  
  
   
-  useEffect(() => {                 //  <==  ADD                                   
+  useEffect(() => {                                               
     authenticateUser(); 
   }, []);
 
